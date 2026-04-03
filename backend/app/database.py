@@ -24,3 +24,8 @@ class Base(DeclarativeBase):
     pass
 
 
+async def create_tables():
+    """Create all tables from models (used when Alembic is not available)."""
+    import app.models  # noqa: F401 - register all models
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)

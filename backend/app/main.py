@@ -26,6 +26,16 @@ def create_app() -> FastAPI:
     setup_middleware(app)
     _register_routers(app, settings.api_prefix)
 
+    @app.on_event("startup")
+    async def on_startup():
+        from app.database import create_tables
+        logging.getLogger(__name__).info("Creating database tables if needed...")
+        try:
+            await create_tables()
+            logging.getLogger(__name__).info("Database tables ready.")
+        except Exception as e:
+            logging.getLogger(__name__).error("Failed to create tables: %s", e)
+
     @app.get("/health")
     async def health_check():
         return {"status": "healthy", "service": settings.app_name}

@@ -43,7 +43,12 @@
       "Bash(gh auth:*)",
       "Bash(npx vercel:*)",
       "Bash(curl -s --max-time 90 \"https://fiberhub-api.onrender.com/api/v1/docs\" -o /dev/null -w \"HTTP %{http_code} in %{time_total}s\")",
-      "Bash(curl -sk --max-time 90 \"https://fiberhub-api.onrender.com/\" -w \"\\\\nHTTP %{http_code} in %{time_total}s\")"
+      "Bash(curl -sk --max-time 90 \"https://fiberhub-api.onrender.com/\" -w \"\\\\nHTTP %{http_code} in %{time_total}s\")",
+      "Bash(curl -sk --max-time 120 \"https://fiberhub-api.onrender.com/api/v1/docs\" -o /dev/null -w \"HTTP %{http_code} in %{time_total}s\\\\n\")",
+      "Bash(curl -sk --max-time 30 -X POST \"https://fiberhub-api.onrender.com/api/v1/auth/register\" -H \"Content-Type: application/json\" -d '{\"\"first_name\"\":\"\"Test\"\",\"\"last_name\"\":\"\"User\"\",\"\"email\"\":\"\"test@fiberhub.eg\"\",\"\"password\"\":\"\"Test1234!\"\",\"\"account_type\"\":\"\"buyer\"\"}')",
+      "Bash(curl -sk --max-time 30 -X POST \"https://fiberhub-api.onrender.com/api/v1/auth/register\" -H \"Content-Type: application/json\" -d \"{\"\"first_name\"\":\"\"Test\"\",\"\"last_name\"\":\"\"User\"\",\"\"email\"\":\"\"test@fiberhub.eg\"\",\"\"password\"\":\"\"Test12345\"\",\"\"account_type\"\":\"\"buyer\"\"}\")",
+      "Bash(curl -sk --max-time 30 -X POST \"https://fiberhub-api.onrender.com/api/v1/auth/register\" -H \"Content-Type: application/json\" -d '{\"\"first_name\"\":\"\"Test\"\",\"\"last_name\"\":\"\"User\"\",\"\"email\"\":\"\"test@fiberhub.eg\"\",\"\"password\"\":\"\"TestPass123\"\",\"\"account_type\"\":\"\"buyer\"\"}' -v)",
+      "Bash(curl -sk --max-time 30 \"https://fiberhub-api.onrender.com/api/v1/categories/products\")"
     ]
   }
 }
