@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import { useTranslation } from "@/store/language";
 import type { Review } from "@/types/review";
 import {
   Card,
@@ -35,6 +36,8 @@ export default function ReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslation();
+
   useEffect(() => {
     api
       .get("/companies/my")
@@ -43,9 +46,9 @@ export default function ReviewsPage() {
         const reviewsRes = await api.get(`/reviews/company/${cId}`);
         setReviews(reviewsRes.data.items ?? reviewsRes.data);
       })
-      .catch(() => setError("Failed to load reviews."))
+      .catch(() => setError(t("reviews.loadFailed")))
       .finally(() => setLoading(false));
-  }, []);
+  }, [t]);
 
   if (loading) {
     return (
@@ -70,12 +73,11 @@ export default function ReviewsPage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold">Reviews</h1>
+      <h1 className="text-2xl font-bold">{t("reviews.title")}</h1>
 
-      {/* Summary */}
       <Card>
         <CardHeader>
-          <CardTitle>Overall Rating</CardTitle>
+          <CardTitle>{t("reviews.overallRating")}</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center gap-4">
           <div className="text-4xl font-bold">
@@ -84,19 +86,17 @@ export default function ReviewsPage() {
           <div>
             {reviews.length > 0 && <StarRating rating={Math.round(avgRating)} />}
             <p className="text-sm text-muted-foreground">
-              {reviews.length} review{reviews.length !== 1 ? "s" : ""}
+              {reviews.length} {reviews.length !== 1 ? t("reviews.reviewsCount") : t("reviews.reviewCount")}
             </p>
           </div>
         </CardContent>
       </Card>
 
-      {/* Reviews list */}
       {reviews.length === 0 ? (
         <Card>
           <CardContent className="pt-6 text-center">
             <p className="text-muted-foreground">
-              No reviews yet. Reviews will appear here once clients rate your
-              company.
+              {t("reviews.empty")}
             </p>
           </CardContent>
         </Card>
@@ -119,13 +119,13 @@ export default function ReviewsPage() {
                   review.documentation) && (
                   <div className="flex gap-4 text-xs text-muted-foreground">
                     {review.response_speed != null && (
-                      <span>Speed: {review.response_speed}/5</span>
+                      <span>{t("reviews.speed")}: {review.response_speed}/5</span>
                     )}
                     {review.communication != null && (
-                      <span>Communication: {review.communication}/5</span>
+                      <span>{t("reviews.communication")}: {review.communication}/5</span>
                     )}
                     {review.documentation != null && (
-                      <span>Documentation: {review.documentation}/5</span>
+                      <span>{t("reviews.documentation")}: {review.documentation}/5</span>
                     )}
                   </div>
                 )}

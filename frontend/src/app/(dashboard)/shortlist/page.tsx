@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
+import { useTranslation } from "@/store/language";
 import type { Company } from "@/types/company";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,17 +29,18 @@ export default function ShortlistPage() {
   const [items, setItems] = useState<ShortlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const t = useTranslation();
 
   const fetchShortlist = useCallback(async () => {
     try {
       const res = await api.get("/shortlist");
       setItems(res.data.items ?? res.data);
     } catch {
-      setError("Failed to load shortlist.");
+      setError(t("shortlist.loadFailed"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchShortlist();
@@ -49,7 +51,7 @@ export default function ShortlistPage() {
       await api.delete(`/shortlist/${id}`);
       setItems((prev) => prev.filter((item) => item.id !== id));
     } catch {
-      setError("Failed to remove item.");
+      setError(t("shortlist.removeFailed"));
     }
   };
 
@@ -71,17 +73,16 @@ export default function ShortlistPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Shortlist</h1>
+      <h1 className="text-2xl font-bold">{t("shortlist.title")}</h1>
 
       {items.length === 0 ? (
         <Card>
           <CardContent className="pt-6 text-center">
             <p className="text-muted-foreground">
-              Your shortlist is empty. Browse companies and profiles to save
-              them here.
+              {t("shortlist.empty")}
             </p>
             <Button className="mt-4" variant="outline" render={<Link href="/search" />}>
-              Search Companies
+              {t("shortlist.searchCompanies")}
             </Button>
           </CardContent>
         </Card>
@@ -93,17 +94,17 @@ export default function ShortlistPage() {
                 <div className="flex items-start justify-between">
                   <div className="min-w-0 flex-1">
                     <CardTitle className="text-base truncate">
-                      {item.company?.name ?? item.profile_name ?? "Unknown"}
+                      {item.company?.name ?? item.profile_name ?? t("common.unknown")}
                     </CardTitle>
                     <CardDescription className="truncate">
                       {item.company
                         ? item.company.company_type
-                        : item.profile_headline ?? "Individual"}
+                        : item.profile_headline ?? t("common.individual")}
                     </CardDescription>
                   </div>
                   {item.company?.verification_status === "approved" && (
                     <Badge variant="default" className="ml-2 shrink-0">
-                      Verified
+                      {t("shortlist.verified")}
                     </Badge>
                   )}
                 </div>
@@ -113,11 +114,11 @@ export default function ShortlistPage() {
                   <div className="text-sm text-muted-foreground">
                     {[item.company.city, item.company.governorate]
                       .filter(Boolean)
-                      .join(", ") || "Location not specified"}
+                      .join(", ") || t("shortlist.locationNotSpecified")}
                   </div>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Saved on{" "}
+                  {t("shortlist.savedOn")}{" "}
                   {new Date(item.created_at).toLocaleDateString()}
                 </p>
                 <div className="flex gap-2">
@@ -134,7 +135,7 @@ export default function ShortlistPage() {
                       />
                     }
                   >
-                    View
+                    {t("shortlist.view")}
                   </Button>
                   <Button
                     variant="ghost"
@@ -142,7 +143,7 @@ export default function ShortlistPage() {
                     className="text-destructive hover:text-destructive"
                     onClick={() => handleRemove(item.id)}
                   >
-                    Remove
+                    {t("shortlist.remove")}
                   </Button>
                 </div>
               </CardContent>

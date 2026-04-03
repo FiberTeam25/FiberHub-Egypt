@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/store/language";
 import { cn } from "@/lib/utils";
+import type { TranslationKey } from "@/lib/i18n";
 import {
   LayoutDashboard,
   Building2,
@@ -19,53 +21,54 @@ import {
 } from "lucide-react";
 
 interface NavItem {
-  label: string;
+  labelKey: TranslationKey;
   href: string;
   icon: React.ElementType;
 }
 
 function getBuyerNav(): NavItem[] {
   return [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Company Profile", href: "/company/profile", icon: Building2 },
-    { label: "Team", href: "/company/team", icon: Users },
-    { label: "RFQs", href: "/rfqs", icon: FileText },
-    { label: "Shortlist", href: "/shortlist", icon: Bookmark },
-    { label: "Messages", href: "/messages", icon: MessageSquare },
-    { label: "Notifications", href: "/notifications", icon: Bell },
-    { label: "Verification", href: "/company/verification", icon: ShieldCheck },
-    { label: "Settings", href: "/company/settings", icon: Settings },
+    { labelKey: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { labelKey: "nav.companyProfile", href: "/company/profile", icon: Building2 },
+    { labelKey: "nav.team", href: "/company/team", icon: Users },
+    { labelKey: "nav.rfqs", href: "/rfqs", icon: FileText },
+    { labelKey: "nav.shortlist", href: "/shortlist", icon: Bookmark },
+    { labelKey: "nav.messages", href: "/messages", icon: MessageSquare },
+    { labelKey: "nav.notifications", href: "/notifications", icon: Bell },
+    { labelKey: "nav.verification", href: "/company/verification", icon: ShieldCheck },
+    { labelKey: "nav.settings", href: "/company/settings", icon: Settings },
   ];
 }
 
 function getSupplierNav(): NavItem[] {
   return [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Company Profile", href: "/company/profile", icon: Building2 },
-    { label: "Team", href: "/company/team", icon: Users },
-    { label: "Incoming RFQs", href: "/rfqs", icon: FileText },
-    { label: "Messages", href: "/messages", icon: MessageSquare },
-    { label: "Reviews", href: "/reviews", icon: Star },
-    { label: "Notifications", href: "/notifications", icon: Bell },
-    { label: "Verification", href: "/company/verification", icon: ShieldCheck },
-    { label: "Settings", href: "/company/settings", icon: Settings },
+    { labelKey: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { labelKey: "nav.companyProfile", href: "/company/profile", icon: Building2 },
+    { labelKey: "nav.team", href: "/company/team", icon: Users },
+    { labelKey: "nav.incomingRfqs", href: "/rfqs", icon: FileText },
+    { labelKey: "nav.messages", href: "/messages", icon: MessageSquare },
+    { labelKey: "nav.reviews", href: "/reviews", icon: Star },
+    { labelKey: "nav.notifications", href: "/notifications", icon: Bell },
+    { labelKey: "nav.verification", href: "/company/verification", icon: ShieldCheck },
+    { labelKey: "nav.settings", href: "/company/settings", icon: Settings },
   ];
 }
 
 function getIndividualNav(): NavItem[] {
   return [
-    { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "My Profile", href: "/profile", icon: UserCircle },
-    { label: "Messages", href: "/messages", icon: MessageSquare },
-    { label: "Reviews", href: "/reviews", icon: Star },
-    { label: "Notifications", href: "/notifications", icon: Bell },
-    { label: "Verification", href: "/company/verification", icon: ShieldCheck },
+    { labelKey: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { labelKey: "nav.profile", href: "/profile", icon: UserCircle },
+    { labelKey: "nav.messages", href: "/messages", icon: MessageSquare },
+    { labelKey: "nav.reviews", href: "/reviews", icon: Star },
+    { labelKey: "nav.notifications", href: "/notifications", icon: Bell },
+    { labelKey: "nav.verification", href: "/company/verification", icon: ShieldCheck },
   ];
 }
 
 export function Sidebar() {
   const pathname = usePathname();
   const { user } = useAuthStore();
+  const t = useTranslation();
 
   const accountType = user?.account_type || "buyer";
   let navItems: NavItem[];
@@ -95,7 +98,7 @@ export function Sidebar() {
               )}
             >
               <item.icon className="h-4 w-4" />
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           );
         })}

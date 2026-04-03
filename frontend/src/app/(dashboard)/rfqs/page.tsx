@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/store/language";
 import { useRfqs } from "@/hooks/useRfqs";
 import type { RFQ, RFQStatus } from "@/types/rfq";
 import type { PaginatedResponse } from "@/types/api";
@@ -33,11 +34,11 @@ const STATUS_VARIANTS: Record<RFQStatus, "default" | "secondary" | "outline" | "
   cancelled: "destructive",
 };
 
-function RfqTable({ rfqs }: { rfqs: RFQ[] }) {
+function RfqTable({ rfqs, t }: { rfqs: RFQ[]; t: (key: string) => string }) {
   if (rfqs.length === 0) {
     return (
       <div className="py-12 text-center text-muted-foreground">
-        No RFQs found.
+        {t("rfqs.noRfqs")}
       </div>
     );
   }
@@ -46,11 +47,11 @@ function RfqTable({ rfqs }: { rfqs: RFQ[] }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Title</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Deadline</TableHead>
-          <TableHead>Responses</TableHead>
-          <TableHead>Created</TableHead>
+          <TableHead>{t("rfqs.tableTitle")}</TableHead>
+          <TableHead>{t("rfqs.tableStatus")}</TableHead>
+          <TableHead>{t("rfqs.tableDeadline")}</TableHead>
+          <TableHead>{t("rfqs.tableResponses")}</TableHead>
+          <TableHead>{t("rfqs.tableCreated")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -83,6 +84,7 @@ function RfqTable({ rfqs }: { rfqs: RFQ[] }) {
 
 export default function RfqsPage() {
   const user = useAuthStore((s) => s.user);
+  const t = useTranslation();
   const isBuyer = user?.account_type === "buyer";
 
   const [tab, setTab] = useState<string>(isBuyer ? "my" : "incoming");
@@ -112,7 +114,7 @@ export default function RfqsPage() {
   if (isError) {
     return (
       <div className="py-20 text-center">
-        <p className="text-destructive">Failed to load RFQs.</p>
+        <p className="text-destructive">{t("rfqs.loadFailed")}</p>
       </div>
     );
   }
@@ -120,25 +122,25 @@ export default function RfqsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">RFQs</h1>
+        <h1 className="text-2xl font-bold">{t("rfqs.title")}</h1>
         {isBuyer && (
-          <Button render={<Link href="/rfqs/create" />}>Create RFQ</Button>
+          <Button render={<Link href="/rfqs/create" />}>{t("rfqs.createRfq")}</Button>
         )}
       </div>
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as string)}>
         <div className="flex items-center justify-between gap-4">
           <TabsList>
-            <TabsTrigger value="my">My RFQs</TabsTrigger>
-            <TabsTrigger value="incoming">Incoming RFQs</TabsTrigger>
+            <TabsTrigger value="my">{t("rfqs.myRfqs")}</TabsTrigger>
+            <TabsTrigger value="incoming">{t("rfqs.incomingRfqs")}</TabsTrigger>
           </TabsList>
 
           <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as string ?? "")}>
             <SelectTrigger className="w-[160px]">
-              <SelectValue placeholder="Filter status" />
+              <SelectValue placeholder={t("rfqs.filterStatus")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="all">{t("rfqs.allStatuses")}</SelectItem>
               <SelectItem value="draft">Draft</SelectItem>
               <SelectItem value="open">Open</SelectItem>
               <SelectItem value="closed">Closed</SelectItem>
@@ -149,10 +151,10 @@ export default function RfqsPage() {
         </div>
 
         <TabsContent value="my">
-          <RfqTable rfqs={rfqs} />
+          <RfqTable rfqs={rfqs} t={t as (key: string) => string} />
         </TabsContent>
         <TabsContent value="incoming">
-          <RfqTable rfqs={rfqs} />
+          <RfqTable rfqs={rfqs} t={t as (key: string) => string} />
         </TabsContent>
       </Tabs>
     </div>

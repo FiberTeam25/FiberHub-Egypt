@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/store/language";
 import api from "@/lib/api";
 import type { User } from "@/types/user";
+import type { TranslationKey } from "@/lib/i18n";
 import {
   Card,
   CardContent,
@@ -14,14 +16,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const ACCOUNT_TYPE_LABELS: Record<string, string> = {
-  buyer: "Buyer",
-  supplier: "Supplier",
-  manufacturer: "Manufacturer",
-  distributor: "Distributor",
-  contractor: "Contractor",
-  subcontractor: "Subcontractor",
-  individual: "Individual Professional",
+const ACCOUNT_TYPE_KEYS: Record<string, TranslationKey> = {
+  buyer: "accountType.buyer",
+  supplier: "accountType.supplier",
+  manufacturer: "accountType.manufacturer",
+  distributor: "accountType.distributor",
+  contractor: "accountType.contractor",
+  subcontractor: "accountType.subcontractor",
+  individual: "accountType.individual",
 };
 
 const SUPPLIER_TYPES = new Set([
@@ -33,16 +35,18 @@ const SUPPLIER_TYPES = new Set([
 ]);
 
 function QuickActions({ accountType }: { accountType: string }) {
+  const t = useTranslation();
+
   if (accountType === "buyer") {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
+          <CardTitle className="text-lg">{t("dashboard.quickActions")}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
-          <Button render={<Link href="/rfqs/create" />}>Create RFQ</Button>
+          <Button render={<Link href="/rfqs/create" />}>{t("dashboard.createRfq")}</Button>
           <Button variant="outline" render={<Link href="/search" />}>
-            Search Suppliers
+            {t("dashboard.searchSuppliers")}
           </Button>
         </CardContent>
       </Card>
@@ -53,14 +57,14 @@ function QuickActions({ accountType }: { accountType: string }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
+          <CardTitle className="text-lg">{t("dashboard.quickActions")}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
           <Button render={<Link href="/rfqs" />}>
-            View Incoming RFQs
+            {t("dashboard.viewIncomingRfqs")}
           </Button>
           <Button variant="outline" render={<Link href="/company/profile" />}>
-            Company Profile
+            {t("dashboard.companyProfile")}
           </Button>
         </CardContent>
       </Card>
@@ -71,12 +75,12 @@ function QuickActions({ accountType }: { accountType: string }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
+          <CardTitle className="text-lg">{t("dashboard.quickActions")}</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
-          <Button render={<Link href="/profile" />}>Edit Profile</Button>
+          <Button render={<Link href="/profile" />}>{t("dashboard.editProfile")}</Button>
           <Button variant="outline" render={<Link href="/search" />}>
-            Browse Companies
+            {t("dashboard.browseCompanies")}
           </Button>
         </CardContent>
       </Card>
@@ -88,6 +92,7 @@ function QuickActions({ accountType }: { accountType: string }) {
 
 export default function DashboardPage() {
   const user = useAuthStore((s) => s.user) as User | null;
+  const t = useTranslation();
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -112,26 +117,26 @@ export default function DashboardPage() {
     .filter(Boolean)
     .join(" ");
 
+  const accountTypeKey = ACCOUNT_TYPE_KEYS[accountType];
+
   return (
     <div className="space-y-6">
-      {/* Welcome card */}
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">
-            Welcome back{displayName ? `, ${displayName}` : ""}
+            {t("dashboard.welcomeBack")}{displayName ? `, ${displayName}` : ""}
           </CardTitle>
           <CardDescription>
-            Account type:{" "}
-            {ACCOUNT_TYPE_LABELS[accountType] ?? accountType}
+            {t("dashboard.accountType")}:{" "}
+            {accountTypeKey ? t(accountTypeKey) : accountType}
           </CardDescription>
         </CardHeader>
       </Card>
 
-      {/* Notifications card */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>Unread Notifications</CardDescription>
+            <CardDescription>{t("dashboard.unreadNotifications")}</CardDescription>
             <CardTitle className="text-3xl">{unreadCount}</CardTitle>
           </CardHeader>
           <CardContent>
@@ -140,13 +145,12 @@ export default function DashboardPage() {
               size="sm"
               render={<Link href="/notifications" />}
             >
-              View Notifications
+              {t("dashboard.viewNotifications")}
             </Button>
           </CardContent>
         </Card>
       </div>
 
-      {/* Role-based quick actions */}
       <QuickActions accountType={accountType} />
     </div>
   );

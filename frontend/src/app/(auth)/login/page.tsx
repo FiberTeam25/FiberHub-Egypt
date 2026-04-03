@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useLogin } from "@/hooks/useAuth";
+import { useTranslation } from "@/store/language";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +24,7 @@ function LoginPageContent() {
   const searchParams = useSearchParams();
   const registered = searchParams.get("registered");
   const { mutate: login, isPending, error } = useLogin();
+  const t = useTranslation();
 
   const {
     register,
@@ -41,31 +43,31 @@ function LoginPageContent() {
               FH
             </div>
           </Link>
-          <CardTitle>Welcome back</CardTitle>
-          <CardDescription>Sign in to your FiberHub Egypt account</CardDescription>
+          <CardTitle>{t("auth.welcomeBack")}</CardTitle>
+          <CardDescription>{t("auth.signInDescription")}</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             {registered && (
               <div className="rounded-lg bg-green-50 border border-green-200 p-3 text-sm text-green-800">
-                Account created! Check your email to verify, then sign in.
+                {t("auth.registeredSuccess")}
               </div>
             )}
             {error && (
               <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-800">
-                {(error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || "Login failed"}
+                {(error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || t("auth.loginFailed")}
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t("auth.email")}</Label>
               <Input id="email" type="email" placeholder="you@company.eg" {...register("email")} />
               {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("auth.password")}</Label>
                 <Link href="/forgot-password" className="text-xs text-muted-foreground hover:text-foreground">
-                  Forgot password?
+                  {t("auth.forgotPassword")}
                 </Link>
               </div>
               <Input id="password" type="password" {...register("password")} />
@@ -74,12 +76,12 @@ function LoginPageContent() {
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending ? "Signing in..." : "Sign In"}
+              {isPending ? t("auth.signingIn") : t("auth.signIn")}
             </Button>
             <p className="text-sm text-muted-foreground text-center">
-              Don&apos;t have an account?{" "}
+              {t("auth.noAccount")}{" "}
               <Link href="/signup" className="text-foreground font-medium hover:underline">
-                Sign up
+                {t("auth.signUp")}
               </Link>
             </p>
           </CardFooter>

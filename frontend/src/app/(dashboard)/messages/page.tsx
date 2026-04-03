@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useThreads, useThread, useSendMessage, useCreateThread, useMarkRead } from "@/hooks/useMessages";
 import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/store/language";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,6 +14,7 @@ import { formatDistanceToNow } from "date-fns";
 
 export default function MessagesPage() {
   const { user } = useAuthStore();
+  const t = useTranslation();
   const { data: threadData, isLoading } = useThreads();
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const { data: threadDetail } = useThread(selectedThreadId || "");
@@ -57,18 +59,18 @@ export default function MessagesPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Messages</h1>
+        <h1 className="text-2xl font-bold">{t("messages.title")}</h1>
         <Dialog open={newThreadOpen} onOpenChange={setNewThreadOpen}>
           <DialogTrigger render={<Button size="sm" />}>
-            <Plus className="h-4 w-4 mr-2" />New Conversation
+            <Plus className="h-4 w-4 mr-2" />{t("messages.newConversation")}
           </DialogTrigger>
           <DialogContent>
-            <DialogHeader><DialogTitle>New Conversation</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{t("messages.newConversation")}</DialogTitle></DialogHeader>
             <div className="space-y-4">
-              <div><label className="text-sm font-medium">Participant User IDs (comma-separated)</label><Input value={newThread.participant_user_ids} onChange={(e) => setNewThread({ ...newThread, participant_user_ids: e.target.value })} placeholder="user-id-1, user-id-2" /></div>
-              <div><label className="text-sm font-medium">Subject</label><Input value={newThread.subject} onChange={(e) => setNewThread({ ...newThread, subject: e.target.value })} /></div>
-              <div><label className="text-sm font-medium">Message</label><Textarea value={newThread.initial_message} onChange={(e) => setNewThread({ ...newThread, initial_message: e.target.value })} /></div>
-              <Button onClick={handleCreateThread} disabled={createThread.isPending}>{createThread.isPending ? "Creating..." : "Create"}</Button>
+              <div><label className="text-sm font-medium">{t("messages.participantIds")}</label><Input value={newThread.participant_user_ids} onChange={(e) => setNewThread({ ...newThread, participant_user_ids: e.target.value })} placeholder="user-id-1, user-id-2" /></div>
+              <div><label className="text-sm font-medium">{t("messages.subject")}</label><Input value={newThread.subject} onChange={(e) => setNewThread({ ...newThread, subject: e.target.value })} /></div>
+              <div><label className="text-sm font-medium">{t("messages.message")}</label><Textarea value={newThread.initial_message} onChange={(e) => setNewThread({ ...newThread, initial_message: e.target.value })} /></div>
+              <Button onClick={handleCreateThread} disabled={createThread.isPending}>{createThread.isPending ? t("messages.creating") : t("messages.create")}</Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -80,20 +82,20 @@ export default function MessagesPage() {
           {isLoading ? (
             <div className="flex justify-center py-8"><Loader2 className="h-5 w-5 animate-spin" /></div>
           ) : threads.length === 0 ? (
-            <div className="text-center py-8 text-sm text-muted-foreground">No conversations yet</div>
+            <div className="text-center py-8 text-sm text-muted-foreground">{t("messages.noConversations")}</div>
           ) : (
-            threads.map((t: { id: string; subject?: string; unread_count?: number; last_message?: string; updated_at?: string; created_at: string }) => (
+            threads.map((th: { id: string; subject?: string; unread_count?: number; last_message?: string; updated_at?: string; created_at: string }) => (
               <div
-                key={t.id}
-                className={`p-3 border-b cursor-pointer hover:bg-muted/50 transition-colors ${selectedThreadId === t.id ? "bg-muted" : ""}`}
-                onClick={() => handleSelectThread(t.id)}
+                key={th.id}
+                className={`p-3 border-b cursor-pointer hover:bg-muted/50 transition-colors ${selectedThreadId === th.id ? "bg-muted" : ""}`}
+                onClick={() => handleSelectThread(th.id)}
               >
                 <div className="flex items-center justify-between">
-                  <p className="font-medium text-sm truncate">{t.subject || "Direct message"}</p>
-                  {(t.unread_count ?? 0) > 0 && <Badge variant="destructive" className="text-xs">{t.unread_count}</Badge>}
+                  <p className="font-medium text-sm truncate">{th.subject || t("messages.directMessage")}</p>
+                  {(th.unread_count ?? 0) > 0 && <Badge variant="destructive" className="text-xs">{th.unread_count}</Badge>}
                 </div>
-                <p className="text-xs text-muted-foreground truncate mt-1">{t.last_message || "No messages"}</p>
-                <p className="text-xs text-muted-foreground mt-1">{formatDistanceToNow(new Date(t.updated_at || t.created_at), { addSuffix: true })}</p>
+                <p className="text-xs text-muted-foreground truncate mt-1">{th.last_message || t("messages.noMessages")}</p>
+                <p className="text-xs text-muted-foreground mt-1">{formatDistanceToNow(new Date(th.updated_at || th.created_at), { addSuffix: true })}</p>
               </div>
             ))
           )}
@@ -104,8 +106,8 @@ export default function MessagesPage() {
           {selectedThreadId ? (
             <>
               <div className="p-3 border-b">
-                <p className="font-medium text-sm">{threadDetail?.subject || "Conversation"}</p>
-                <p className="text-xs text-muted-foreground capitalize">{threadDetail?.context_type} thread</p>
+                <p className="font-medium text-sm">{threadDetail?.subject || t("messages.conversation")}</p>
+                <p className="text-xs text-muted-foreground capitalize">{threadDetail?.context_type} {t("messages.thread")}</p>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messages.map((m: { id: string; sender_id: string; sender_name?: string; content: string; created_at: string }) => {
@@ -125,7 +127,7 @@ export default function MessagesPage() {
                 <Input
                   value={newMsg}
                   onChange={(e) => setNewMsg(e.target.value)}
-                  placeholder="Type a message..."
+                  placeholder={t("messages.typePlaceholder")}
                   onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
                 />
                 <Button size="icon" onClick={handleSend} disabled={sendMessage.isPending}>
@@ -137,7 +139,7 @@ export default function MessagesPage() {
             <div className="flex-1 flex items-center justify-center text-muted-foreground">
               <div className="text-center">
                 <MessageSquare className="h-8 w-8 mx-auto mb-2" />
-                <p className="text-sm">Select a conversation</p>
+                <p className="text-sm">{t("messages.selectConversation")}</p>
               </div>
             </div>
           )}

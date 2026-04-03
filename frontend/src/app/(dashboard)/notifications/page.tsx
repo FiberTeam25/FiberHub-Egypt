@@ -1,6 +1,7 @@
 "use client";
 
 import { useNotifications, useMarkNotificationRead, useMarkAllRead } from "@/hooks/useNotifications";
+import { useTranslation } from "@/store/language";
 import type { Notification, NotificationType } from "@/types/notification";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,6 +58,7 @@ export default function NotificationsPage() {
   const { data, isLoading, isError } = useNotifications();
   const markRead = useMarkNotificationRead();
   const markAllRead = useMarkAllRead();
+  const t = useTranslation();
 
   const notifications: Notification[] = data?.items ?? data ?? [];
 
@@ -80,7 +82,7 @@ export default function NotificationsPage() {
   if (isError) {
     return (
       <div className="py-20 text-center">
-        <p className="text-destructive">Failed to load notifications.</p>
+        <p className="text-destructive">{t("notifications.loadFailed")}</p>
       </div>
     );
   }
@@ -88,7 +90,7 @@ export default function NotificationsPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Notifications</h1>
+        <h1 className="text-2xl font-bold">{t("notifications.title")}</h1>
         {notifications.length > 0 && (
           <Button
             variant="outline"
@@ -96,7 +98,7 @@ export default function NotificationsPage() {
             onClick={() => markAllRead.mutate()}
             disabled={markAllRead.isPending}
           >
-            {markAllRead.isPending ? "Marking..." : "Mark All Read"}
+            {markAllRead.isPending ? t("notifications.marking") : t("notifications.markAllRead")}
           </Button>
         )}
       </div>
@@ -104,7 +106,7 @@ export default function NotificationsPage() {
       {notifications.length === 0 ? (
         <Card>
           <CardContent className="pt-6 text-center">
-            <p className="text-muted-foreground">No notifications yet.</p>
+            <p className="text-muted-foreground">{t("notifications.empty")}</p>
           </CardContent>
         </Card>
       ) : (

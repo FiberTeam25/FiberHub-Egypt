@@ -4,14 +4,7 @@ import { translations, type Locale, type TranslationKey } from "@/lib/i18n";
 interface LanguageState {
   lang: Locale;
   setLang: (lang: Locale) => void;
-  t: (key: TranslationKey) => string;
-}
-
-function getInitialLang(): Locale {
-  if (typeof window === "undefined") return "en";
-  const stored = localStorage.getItem("fiberhub-lang");
-  if (stored === "ar" || stored === "en") return stored;
-  return "en";
+  hydrate: () => void;
 }
 
 function applyLangToDocument(lang: Locale) {
@@ -20,7 +13,6 @@ function applyLangToDocument(lang: Locale) {
   html.setAttribute("lang", lang);
   html.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
 
-  // Toggle the Arabic font class on <body>
   if (lang === "ar") {
     document.body.classList.add("font-arabic");
   } else {
@@ -28,26 +20,26 @@ function applyLangToDocument(lang: Locale) {
   }
 }
 
-export const useLanguageStore = create<LanguageState>((set, get) => {
-  // Apply initial language on store creation (client-side only)
-  const initial = getInitialLang();
-  if (typeof window !== "undefined") {
-    // Defer to avoid SSR hydration issues
-    queueMicrotask(() => applyLangToDocument(initial));
-  }
+export const useLanguageStore = create<LanguageState>((set) => ({
+  lang: "en",
 
-  return {
-    lang: initial,
+  setLang: (lang) => {
+    localStorage.setItem("fiberhub-lang", lang);
+    applyLangToDocument(lang);
+    set({ lang });
+  },
 
-    setLang: (lang) => {
-      localStorage.setItem("fiberhub-lang", lang);
-      applyLangToDocument(lang);
-      set({ lang });
-    },
+  hydrate: () => {
+    if (typeof window === "undefined") return;
+    const stored = localStorage.getItem("fiberhub-lang");
+    const lang: Locale = stored === "ar" ? "ar" : "en";
+    applyLangToDocument(lang);
+    set({ lang });
+  },
+}));
 
-    t: (key) => {
-      const lang = get().lang;
-      return translations[lang][key] ?? key;
-    },
-  };
-});
+/** Hook that returns a translation function and re-renders when language changes */
+export function useTranslation() {
+  const lang = useLanguageStore((s) => s.lang);
+  return (key: TranslationKey): string => translations[lang][key] ?? key;
+}

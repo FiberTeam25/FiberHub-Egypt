@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/store/language";
 import { useCurrentUser, useLogout } from "@/hooks/useAuth";
 import { useUnreadCount } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ export function Header() {
   const logout = useLogout();
   const { data: unreadCount } = useUnreadCount();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const t = useTranslation();
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white/95 backdrop-blur">
@@ -35,13 +37,13 @@ export function Header() {
 
         <nav className="hidden md:flex items-center gap-6 text-sm">
           <Link href="/search" className="text-muted-foreground hover:text-foreground transition-colors">
-            Search
+            {t("nav.search")}
           </Link>
           <Link href="/search?type=companies" className="text-muted-foreground hover:text-foreground transition-colors">
-            Companies
+            {t("nav.companies")}
           </Link>
           <Link href="/search?type=professionals" className="text-muted-foreground hover:text-foreground transition-colors">
-            Professionals
+            {t("nav.professionals")}
           </Link>
         </nav>
 
@@ -67,26 +69,26 @@ export function Header() {
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem render={<Link href="/dashboard" className="cursor-pointer" />}>
                       <LayoutDashboard className="mr-2 h-4 w-4" />
-                      Dashboard
+                      {t("nav.dashboard")}
                   </DropdownMenuItem>
                   {user.account_type === "admin" && (
                     <DropdownMenuItem render={<Link href="/admin" className="cursor-pointer" />}>
                         <LayoutDashboard className="mr-2 h-4 w-4" />
-                        Admin Panel
+                        {t("nav.adminPanel")}
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={logout} className="cursor-pointer text-red-600">
                     <LogOut className="mr-2 h-4 w-4" />
-                    Logout
+                    {t("nav.logout")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" render={<Link href="/login" />}>Login</Button>
-              <Button size="sm" render={<Link href="/signup" />}>Sign Up</Button>
+              <Button variant="ghost" size="sm" render={<Link href="/login" />}>{t("nav.login")}</Button>
+              <Button size="sm" render={<Link href="/signup" />}>{t("nav.signUp")}</Button>
             </div>
           )}
           <Button
@@ -102,9 +104,9 @@ export function Header() {
 
       {mobileOpen && (
         <nav className="border-t md:hidden px-4 py-3 space-y-2">
-          <Link href="/search" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>Search</Link>
-          <Link href="/search?type=companies" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>Companies</Link>
-          <Link href="/search?type=professionals" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>Professionals</Link>
+          <Link href="/search" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>{t("nav.search")}</Link>
+          <Link href="/search?type=companies" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>{t("nav.companies")}</Link>
+          <Link href="/search?type=professionals" className="block text-sm text-muted-foreground" onClick={() => setMobileOpen(false)}>{t("nav.professionals")}</Link>
         </nav>
       )}
     </header>
