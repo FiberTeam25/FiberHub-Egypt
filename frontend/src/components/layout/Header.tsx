@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Bell, Menu, User, LogOut, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
+import { LanguageToggle } from "@/components/layout/LanguageToggle";
 
 export function Header() {
   const { user } = useAuthStore();
@@ -45,9 +46,10 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <LanguageToggle />
           {user ? (
             <>
-              <Link href="/dashboard/notifications" className="relative p-2">
+              <Link href="/notifications" className="relative p-2">
                 <Bell className="h-5 w-5 text-muted-foreground" />
                 {unreadCount && unreadCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white font-medium">

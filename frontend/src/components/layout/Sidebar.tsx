@@ -27,39 +27,39 @@ interface NavItem {
 function getBuyerNav(): NavItem[] {
   return [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Company Profile", href: "/dashboard/company/profile", icon: Building2 },
-    { label: "Team", href: "/dashboard/company/team", icon: Users },
-    { label: "RFQs", href: "/dashboard/rfqs", icon: FileText },
-    { label: "Shortlist", href: "/dashboard/shortlist", icon: Bookmark },
-    { label: "Messages", href: "/dashboard/messages", icon: MessageSquare },
-    { label: "Notifications", href: "/dashboard/notifications", icon: Bell },
-    { label: "Verification", href: "/dashboard/company/verification", icon: ShieldCheck },
-    { label: "Settings", href: "/dashboard/company/settings", icon: Settings },
+    { label: "Company Profile", href: "/company/profile", icon: Building2 },
+    { label: "Team", href: "/company/team", icon: Users },
+    { label: "RFQs", href: "/rfqs", icon: FileText },
+    { label: "Shortlist", href: "/shortlist", icon: Bookmark },
+    { label: "Messages", href: "/messages", icon: MessageSquare },
+    { label: "Notifications", href: "/notifications", icon: Bell },
+    { label: "Verification", href: "/company/verification", icon: ShieldCheck },
+    { label: "Settings", href: "/company/settings", icon: Settings },
   ];
 }
 
 function getSupplierNav(): NavItem[] {
   return [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "Company Profile", href: "/dashboard/company/profile", icon: Building2 },
-    { label: "Team", href: "/dashboard/company/team", icon: Users },
-    { label: "Incoming RFQs", href: "/dashboard/rfqs", icon: FileText },
-    { label: "Messages", href: "/dashboard/messages", icon: MessageSquare },
-    { label: "Reviews", href: "/dashboard/reviews", icon: Star },
-    { label: "Notifications", href: "/dashboard/notifications", icon: Bell },
-    { label: "Verification", href: "/dashboard/company/verification", icon: ShieldCheck },
-    { label: "Settings", href: "/dashboard/company/settings", icon: Settings },
+    { label: "Company Profile", href: "/company/profile", icon: Building2 },
+    { label: "Team", href: "/company/team", icon: Users },
+    { label: "Incoming RFQs", href: "/rfqs", icon: FileText },
+    { label: "Messages", href: "/messages", icon: MessageSquare },
+    { label: "Reviews", href: "/reviews", icon: Star },
+    { label: "Notifications", href: "/notifications", icon: Bell },
+    { label: "Verification", href: "/company/verification", icon: ShieldCheck },
+    { label: "Settings", href: "/company/settings", icon: Settings },
   ];
 }
 
 function getIndividualNav(): NavItem[] {
   return [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { label: "My Profile", href: "/dashboard/profile", icon: UserCircle },
-    { label: "Messages", href: "/dashboard/messages", icon: MessageSquare },
-    { label: "Reviews", href: "/dashboard/reviews", icon: Star },
-    { label: "Notifications", href: "/dashboard/notifications", icon: Bell },
-    { label: "Verification", href: "/dashboard/company/verification", icon: ShieldCheck },
+    { label: "My Profile", href: "/profile", icon: UserCircle },
+    { label: "Messages", href: "/messages", icon: MessageSquare },
+    { label: "Reviews", href: "/reviews", icon: Star },
+    { label: "Notifications", href: "/notifications", icon: Bell },
+    { label: "Verification", href: "/company/verification", icon: ShieldCheck },
   ];
 }
 

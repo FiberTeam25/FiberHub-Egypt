@@ -54,7 +54,9 @@
       "Bash(curl -sk --max-time 120 \"https://fiberhub-api.onrender.com/debug/db\")",
       "Bash(curl -sk --max-time 30 -X POST \"https://fiberhub-api.onrender.com/api/v1/auth/register\" -H \"Content-Type: application/json\" -d \"{\"\"first_name\"\":\"\"Mohamed\"\",\"\"last_name\"\":\"\"Sayed\"\",\"\"email\"\":\"\"motaha2012@gmail.com\"\",\"\"password\"\":\"\"Test12345\"\",\"\"account_type\"\":\"\"individual\"\"}\")",
       "Bash(curl -sk --max-time 90 -X POST \"https://fiberhub-api.onrender.com/api/v1/auth/register\" -H \"Content-Type: application/json\" -d \"{\"\"first_name\"\":\"\"Mohamed\"\",\"\"last_name\"\":\"\"Sayed\"\",\"\"email\"\":\"\"test999@fiberhub.eg\"\",\"\"password\"\":\"\"Test12345\"\",\"\"account_type\"\":\"\"individual\"\"}\" -w \"\\\\nHTTP %{http_code}\")",
-      "Bash(curl -sk --max-time 90 -X POST \"https://fiberhub-api.onrender.com/api/v1/auth/register\" -H \"Content-Type: application/json\" -d \"{\"\"first_name\"\":\"\"Mohamed\"\",\"\"last_name\"\":\"\"Sayed\"\",\"\"email\"\":\"\"motaha2012@gmail.com\"\",\"\"password\"\":\"\"Test12345\"\",\"\"account_type\"\":\"\"individual\"\"}\" -w \"\\\\nHTTP %{http_code}\")"
+      "Bash(curl -sk --max-time 90 -X POST \"https://fiberhub-api.onrender.com/api/v1/auth/register\" -H \"Content-Type: application/json\" -d \"{\"\"first_name\"\":\"\"Mohamed\"\",\"\"last_name\"\":\"\"Sayed\"\",\"\"email\"\":\"\"motaha2012@gmail.com\"\",\"\"password\"\":\"\"Test12345\"\",\"\"account_type\"\":\"\"individual\"\"}\" -w \"\\\\nHTTP %{http_code}\")",
+      "WebSearch",
+      "Bash(ls \"E:/Claud code/FiberHub Egypt/frontend/src/app/\\(dashboard\\)/reviews/page.tsx\")"
     ]
   }
 }
