@@ -22,8 +22,13 @@ async def send_email(
     html_body: str,
     text_body: str | None = None,
 ) -> None:
-    """Send an email via SMTP."""
+    """Send an email via SMTP. Skips silently if SMTP is not configured."""
     settings = get_settings()
+
+    # Skip if SMTP host is not configured or is placeholder
+    if not settings.smtp_host or settings.smtp_host in ("localhost", "") and settings.is_production:
+        logger.info("SMTP not configured, skipping email to %s: %s", to_email, subject)
+        return
 
     message = MIMEMultipart("alternative")
     message["From"] = f"{settings.smtp_from_name} <{settings.smtp_from_email}>"
@@ -42,11 +47,11 @@ async def send_email(
             username=settings.smtp_user or None,
             password=settings.smtp_password or None,
             use_tls=settings.smtp_use_tls,
+            timeout=5,
         )
         logger.info("Email sent to %s: %s", to_email, subject)
     except Exception:
-        logger.exception("Failed to send email to %s", to_email)
-        raise
+        logger.warning("Failed to send email to %s (SMTP may not be configured)", to_email)
 
 
 async def send_verification_email(to_email: str, token: str) -> None:
