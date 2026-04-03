@@ -1,6 +1,7 @@
 import logging
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 from app.config import get_settings
 from app.middleware import setup_middleware
@@ -26,6 +27,14 @@ def create_app() -> FastAPI:
     setup_middleware(app)
     _register_routers(app, settings.api_prefix)
 
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception):
+        logging.getLogger(__name__).error("Unhandled error: %s: %s", type(exc).__name__, exc)
+        return JSONResponse(
+            status_code=500,
+            content={"detail": f"{type(exc).__name__}: {str(exc)}"},
+        )
+
     @app.on_event("startup")
     async def on_startup():
         from app.database import create_tables
@@ -39,6 +48,19 @@ def create_app() -> FastAPI:
     @app.get("/health")
     async def health_check():
         return {"status": "healthy", "service": settings.app_name}
+
+    @app.get("/debug/db")
+    async def debug_db():
+        """Temporary debug endpoint — check database connectivity."""
+        from app.database import async_session_factory
+        from sqlalchemy import text
+        try:
+            async with async_session_factory() as session:
+                result = await session.execute(text("SELECT tablename FROM pg_tables WHERE schemaname='public'"))
+                tables = [row[0] for row in result.fetchall()]
+                return {"tables": tables, "count": len(tables)}
+        except Exception as e:
+            return {"error": str(e), "type": type(e).__name__}
 
     return app
 
