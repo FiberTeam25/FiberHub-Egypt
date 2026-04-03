@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { useTranslation } from "@/store/language";
+import { NoCompanyPrompt } from "@/components/layout/NoCompanyPrompt";
 import type { Review } from "@/types/review";
 import {
   Card,
@@ -59,11 +60,7 @@ export default function ReviewsPage() {
   }
 
   if (error) {
-    return (
-      <div className="py-20 text-center">
-        <p className="text-destructive">{error}</p>
-      </div>
-    );
+    return <NoCompanyPrompt />;
   }
 
   const avgRating =

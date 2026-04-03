@@ -98,6 +98,14 @@ export const translations = {
     "reviews.communication": "Communication",
     "reviews.documentation": "Documentation",
 
+    // Company pages
+    "company.noCompanyTitle": "No Company Yet",
+    "company.noCompanyDesc": "You haven't created a company profile yet. Create one to access all company features.",
+    "company.createCompany": "Create Company",
+    "company.companyName": "Company Name",
+    "company.creating": "Creating...",
+    "company.createFailed": "Failed to create company.",
+
     // Shortlist
     "shortlist.title": "Shortlist",
     "shortlist.empty": "Your shortlist is empty. Browse companies and profiles to save them here.",
@@ -283,6 +291,14 @@ export const translations = {
     "reviews.documentation": "التوثيق",
 
     // Shortlist
+    // Company pages
+    "company.noCompanyTitle": "لا توجد شركة بعد",
+    "company.noCompanyDesc": "لم تقم بإنشاء ملف شركة بعد. أنشئ واحداً للوصول إلى جميع ميزات الشركة.",
+    "company.createCompany": "إنشاء شركة",
+    "company.companyName": "اسم الشركة",
+    "company.creating": "جاري الإنشاء...",
+    "company.createFailed": "فشل إنشاء الشركة.",
+
     "shortlist.title": "القائمة المختصرة",
     "shortlist.empty": "قائمتك المختصرة فارغة. تصفح الشركات والملفات الشخصية لحفظها هنا.",
     "shortlist.searchCompanies": "البحث عن شركات",

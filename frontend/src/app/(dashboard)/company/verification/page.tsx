@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import { NoCompanyPrompt } from "@/components/layout/NoCompanyPrompt";
 import type { VerificationStatus } from "@/types/company";
 import { Button } from "@/components/ui/button";
 import {
@@ -121,11 +122,7 @@ export default function VerificationPage() {
   }
 
   if (error && !info) {
-    return (
-      <div className="py-20 text-center">
-        <p className="text-destructive">{error}</p>
-      </div>
-    );
+    return <NoCompanyPrompt />;
   }
 
   const status = info?.status ?? "not_submitted";

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
+import { NoCompanyPrompt } from "@/components/layout/NoCompanyPrompt";
 import type { Company } from "@/types/company";
 import { useAuthStore } from "@/store/auth";
 import { Button } from "@/components/ui/button";
@@ -39,11 +40,7 @@ export default function CompanySettingsPage() {
   }
 
   if (error || !company) {
-    return (
-      <div className="py-20 text-center">
-        <p className="text-destructive">{error ?? "Company not found."}</p>
-      </div>
-    );
+    return <NoCompanyPrompt />;
   }
 
   return (

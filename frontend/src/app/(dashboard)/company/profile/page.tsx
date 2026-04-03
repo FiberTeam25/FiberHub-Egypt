@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/auth";
 import { useUpdateCompany } from "@/hooks/useCompanies";
 import api from "@/lib/api";
+import { NoCompanyPrompt } from "@/components/layout/NoCompanyPrompt";
 import type { Company, CompanyType, CompanySize } from "@/types/company";
 import { Button } from "@/components/ui/button";
 import {
@@ -169,11 +170,7 @@ export default function CompanyProfilePage() {
   }
 
   if (error && !companyId) {
-    return (
-      <div className="py-20 text-center">
-        <p className="text-destructive">{error}</p>
-      </div>
-    );
+    return <NoCompanyPrompt />;
   }
 
   return (

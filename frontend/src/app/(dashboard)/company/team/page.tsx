@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import api from "@/lib/api";
+import { NoCompanyPrompt } from "@/components/layout/NoCompanyPrompt";
 import type { CompanyMember, MemberRole } from "@/types/company";
 import { Button } from "@/components/ui/button";
 import {
@@ -122,11 +123,7 @@ export default function TeamPage() {
   }
 
   if (error && !companyId) {
-    return (
-      <div className="py-20 text-center">
-        <p className="text-destructive">{error}</p>
-      </div>
-    );
+    return <NoCompanyPrompt />;
   }
 
   return (
