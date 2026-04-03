@@ -40,7 +40,8 @@
       "Bash(tr ';' '\\\\n')",
       "Bash(cmd.exe /c \"where python\")",
       "Bash(cmd.exe /c \"netstat -an\")",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(npx vercel:*)"
     ]
   }
 }
