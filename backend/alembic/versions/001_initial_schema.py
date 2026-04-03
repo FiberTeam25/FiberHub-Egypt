@@ -23,52 +23,44 @@ def upgrade() -> None:
     account_type = sa.Enum(
         "buyer", "supplier", "distributor", "manufacturer",
         "contractor", "subcontractor", "individual", "admin",
-        name="account_type",
+        name="account_type", create_type=False,
     )
-    user_status = sa.Enum("active", "suspended", "deactivated", name="user_status")
+    user_status = sa.Enum("active", "suspended", "deactivated", name="user_status", create_type=False)
     company_type = sa.Enum(
         "buyer", "supplier", "distributor", "manufacturer",
         "contractor", "subcontractor",
-        name="company_type",
+        name="company_type", create_type=False,
     )
-    company_size = sa.Enum("1-10", "11-50", "51-200", "201-500", "500+", name="company_size")
-    member_role = sa.Enum("owner", "admin", "manager", "member", name="member_role")
+    company_size = sa.Enum("1-10", "11-50", "51-200", "201-500", "500+", name="company_size", create_type=False)
+    member_role = sa.Enum("owner", "admin", "manager", "member", name="member_role", create_type=False)
     verification_status = sa.Enum(
         "not_submitted", "pending", "approved", "rejected", "expired", "needs_update",
-        name="verification_status",
+        name="verification_status", create_type=False,
     )
-    rfq_status = sa.Enum("draft", "open", "closed", "awarded", "cancelled", name="rfq_status")
+    rfq_status = sa.Enum("draft", "open", "closed", "awarded", "cancelled", name="rfq_status", create_type=False)
     rfq_response_status = sa.Enum(
         "invited", "viewed", "submitted", "revised", "withdrawn",
-        name="rfq_response_status",
+        name="rfq_response_status", create_type=False,
     )
-    thread_context_type = sa.Enum("direct", "rfq", "support", name="thread_context_type")
-    review_target_type = sa.Enum("company", "individual", name="review_target_type")
+    thread_context_type = sa.Enum("direct", "rfq", "support", name="thread_context_type", create_type=False)
+    review_target_type = sa.Enum("company", "individual", name="review_target_type", create_type=False)
     notification_type = sa.Enum(
         "email_verified", "verification_approved", "verification_rejected",
         "rfq_received", "rfq_response_submitted", "rfq_deadline_reminder",
         "new_message", "review_received", "account_suspended",
-        name="notification_type",
+        name="notification_type", create_type=False,
     )
     admin_action_type = sa.Enum(
         "verify_approve", "verify_reject", "user_suspend", "user_activate",
         "review_remove", "company_flag", "category_update",
-        name="admin_action_type",
+        name="admin_action_type", create_type=False,
     )
 
-    # Create enum types explicitly
-    account_type.create(op.get_bind(), checkfirst=True)
-    user_status.create(op.get_bind(), checkfirst=True)
-    company_type.create(op.get_bind(), checkfirst=True)
-    company_size.create(op.get_bind(), checkfirst=True)
-    member_role.create(op.get_bind(), checkfirst=True)
-    verification_status.create(op.get_bind(), checkfirst=True)
-    rfq_status.create(op.get_bind(), checkfirst=True)
-    rfq_response_status.create(op.get_bind(), checkfirst=True)
-    thread_context_type.create(op.get_bind(), checkfirst=True)
-    review_target_type.create(op.get_bind(), checkfirst=True)
-    notification_type.create(op.get_bind(), checkfirst=True)
-    admin_action_type.create(op.get_bind(), checkfirst=True)
+    # Create enum types explicitly (IF NOT EXISTS via checkfirst)
+    for enum in [account_type, user_status, company_type, company_size, member_role,
+                 verification_status, rfq_status, rfq_response_status, thread_context_type,
+                 review_target_type, notification_type, admin_action_type]:
+        enum.create(op.get_bind(), checkfirst=True)
 
     # ------------------------------------------------------------------
     # users

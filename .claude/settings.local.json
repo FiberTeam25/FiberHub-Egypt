@@ -41,7 +41,9 @@
       "Bash(cmd.exe /c \"where python\")",
       "Bash(cmd.exe /c \"netstat -an\")",
       "Bash(gh auth:*)",
-      "Bash(npx vercel:*)"
+      "Bash(npx vercel:*)",
+      "Bash(curl -s --max-time 90 \"https://fiberhub-api.onrender.com/api/v1/docs\" -o /dev/null -w \"HTTP %{http_code} in %{time_total}s\")",
+      "Bash(curl -sk --max-time 90 \"https://fiberhub-api.onrender.com/\" -w \"\\\\nHTTP %{http_code} in %{time_total}s\")"
     ]
   }
 }
