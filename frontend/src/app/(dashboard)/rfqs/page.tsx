@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/store/auth";
 import { useTranslation } from "@/store/language";
 import { useRfqs } from "@/hooks/useRfqs";
+import { useMyCompany } from "@/hooks/useCompanies";
 import type { RFQ, RFQStatus } from "@/types/rfq";
 import type { PaginatedResponse } from "@/types/api";
 import { Button } from "@/components/ui/button";
@@ -66,7 +67,7 @@ function RfqTable({ rfqs, t }: { rfqs: RFQ[]; t: (key: string) => string }) {
               </Link>
             </TableCell>
             <TableCell>
-              <Badge variant={STATUS_VARIANTS[rfq.status]}>{rfq.status}</Badge>
+              <Badge variant={STATUS_VARIANTS[rfq.status]}>{t(`rfqs.status${rfq.status.charAt(0).toUpperCase() + rfq.status.slice(1)}` as Parameters<typeof t>[0])}</Badge>
             </TableCell>
             <TableCell>
               {new Date(rfq.deadline).toLocaleDateString()}
@@ -90,7 +91,13 @@ export default function RfqsPage() {
   const [tab, setTab] = useState<string>(isBuyer ? "my" : "incoming");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
+  const { data: myCompany, isLoading: companyLoading } = useMyCompany();
+  const companyId = myCompany?.id;
+
   const params: Record<string, string | number> = {};
+  if (companyId) {
+    params.company_id = companyId;
+  }
   if (tab === "incoming") {
     params.role = "supplier";
   } else {
@@ -100,13 +107,21 @@ export default function RfqsPage() {
     params.status = statusFilter;
   }
 
-  const { data, isLoading, isError } = useRfqs(params);
+  const { data, isLoading, isError } = useRfqs(companyId ? params : undefined);
   const rfqs: RFQ[] = (data as PaginatedResponse<RFQ>)?.items ?? (Array.isArray(data) ? data : []);
 
-  if (isLoading) {
+  if (companyLoading || isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!companyId) {
+    return (
+      <div className="py-20 text-center">
+        <p className="text-muted-foreground">{t("company.noCompanyDesc")}</p>
       </div>
     );
   }
@@ -141,11 +156,11 @@ export default function RfqsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t("rfqs.allStatuses")}</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
-              <SelectItem value="open">Open</SelectItem>
-              <SelectItem value="closed">Closed</SelectItem>
-              <SelectItem value="awarded">Awarded</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
+              <SelectItem value="draft">{t("rfqs.statusDraft")}</SelectItem>
+              <SelectItem value="open">{t("rfqs.statusOpen")}</SelectItem>
+              <SelectItem value="closed">{t("rfqs.statusClosed")}</SelectItem>
+              <SelectItem value="awarded">{t("rfqs.statusAwarded")}</SelectItem>
+              <SelectItem value="cancelled">{t("rfqs.statusCancelled")}</SelectItem>
             </SelectContent>
           </Select>
         </div>

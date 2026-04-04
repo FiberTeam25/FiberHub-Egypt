@@ -41,7 +41,7 @@ export default function ReviewsPage() {
 
   useEffect(() => {
     api
-      .get("/companies/my")
+      .get("/companies/mine")
       .then(async (res) => {
         const cId = res.data.id;
         const reviewsRes = await api.get(`/reviews/company/${cId}`);

@@ -73,6 +73,17 @@ async def list_companies(
     )
 
 
+@router.get("/mine", response_model=CompanyResponse | None)
+async def get_my_company(
+    user: CurrentUser,
+    service: Annotated[CompanyService, Depends(_get_service)],
+):
+    company = await service.get_primary_company(user)
+    if not company:
+        return None
+    return CompanyResponse.from_company(company)
+
+
 @router.get("/{slug}", response_model=CompanyResponse)
 async def get_company(
     slug: str,

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/store/language";
+import { useAuthStore } from "@/store/auth";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,19 +17,32 @@ import {
 } from "@/components/ui/card";
 import { Building2 } from "lucide-react";
 
+// Map user account_type to company_type (individual/admin have no company type)
+const COMPANY_TYPE_MAP: Record<string, string> = {
+  buyer: "buyer",
+  supplier: "supplier",
+  distributor: "distributor",
+  manufacturer: "manufacturer",
+  contractor: "contractor",
+  subcontractor: "subcontractor",
+};
+
 export function NoCompanyPrompt() {
   const t = useTranslation();
   const router = useRouter();
+  const user = useAuthStore((s) => s.user);
   const [name, setName] = useState("");
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const companyType = user?.account_type ? COMPANY_TYPE_MAP[user.account_type] : "supplier";
 
   const handleCreate = async () => {
     if (!name.trim()) return;
     setCreating(true);
     setError(null);
     try {
-      await api.post("/companies/", { name: name.trim() });
+      await api.post("/companies/", { name: name.trim(), company_type: companyType });
       router.refresh();
       window.location.reload();
     } catch {

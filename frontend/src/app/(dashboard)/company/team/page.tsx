@@ -64,7 +64,7 @@ export default function TeamPage() {
 
   useEffect(() => {
     api
-      .get("/companies/my")
+      .get("/companies/mine")
       .then(async (res) => {
         const cId = res.data.id;
         setCompanyId(cId);

@@ -112,7 +112,7 @@ export default function CompanyProfilePage() {
   useEffect(() => {
     if (!user) return;
     api
-      .get(`/companies/my`)
+      .get(`/companies/mine`)
       .then((res) => {
         const c: Company = res.data;
         setCompanyId(c.id);

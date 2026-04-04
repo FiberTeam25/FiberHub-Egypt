@@ -15,6 +15,16 @@ export function useCompanies(params?: Record<string, string | number | boolean>)
   });
 }
 
+export function useMyCompany() {
+  return useQuery({
+    queryKey: ["myCompany"],
+    queryFn: async () => {
+      const res = await api.get<Company | null>("/companies/mine");
+      return res.data;
+    },
+  });
+}
+
 export function useCompany(slug: string) {
   return useQuery({
     queryKey: ["company", slug],

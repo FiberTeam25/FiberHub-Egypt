@@ -10,6 +10,7 @@ export function useRfqs(params?: Record<string, string | number>) {
       const res = await api.get("/rfqs", { params });
       return res.data;
     },
+    enabled: params !== undefined,
   });
 }
 
