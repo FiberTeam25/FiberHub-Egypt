@@ -63,12 +63,12 @@ class Company(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     slug: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     company_type: Mapped[CompanyType] = mapped_column(
-        Enum(CompanyType, name="company_type", create_constraint=True),
+        Enum(CompanyType, name="company_type", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
     )
     description: Mapped[str | None] = mapped_column(Text)
@@ -81,13 +81,13 @@ class Company(Base):
     city: Mapped[str | None] = mapped_column(String(100))
     governorate: Mapped[str | None] = mapped_column(String(100))
     company_size: Mapped[CompanySize | None] = mapped_column(
-        Enum(CompanySize, name="company_size", create_constraint=True),
+        Enum(CompanySize, name="company_size", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
     )
     year_established: Mapped[int | None] = mapped_column(Integer)
     commercial_reg_no: Mapped[str | None] = mapped_column(String(100))
     tax_id: Mapped[str | None] = mapped_column(String(100))
     verification_status: Mapped[VerificationStatusEnum] = mapped_column(
-        Enum(VerificationStatusEnum, name="verification_status", create_constraint=True),
+        Enum(VerificationStatusEnum, name="verification_status", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=VerificationStatusEnum.NOT_SUBMITTED,
     )
@@ -130,16 +130,16 @@ class CompanyMember(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     company_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
     )
     user_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     role: Mapped[MemberRole] = mapped_column(
-        Enum(MemberRole, name="member_role", create_constraint=True),
+        Enum(MemberRole, name="member_role", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=MemberRole.MEMBER,
     )
@@ -161,13 +161,13 @@ class CompanyService(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     company_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
     )
     service_category_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("service_categories.id"), nullable=False
+        String(36), ForeignKey("service_categories.id"), nullable=False
     )
     description: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(
@@ -185,13 +185,13 @@ class CompanyProduct(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     company_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
     )
     product_category_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("product_categories.id"), nullable=False
+        String(36), ForeignKey("product_categories.id"), nullable=False
     )
     brand_names: Mapped[list[str] | None] = mapped_column(ARRAY(String))
     description: Mapped[str | None] = mapped_column(Text)
@@ -213,13 +213,13 @@ class Certification(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     company_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id", ondelete="CASCADE")
+        String(36), ForeignKey("companies.id", ondelete="CASCADE")
     )
     profile_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("individual_profiles.id", ondelete="CASCADE")
+        String(36), ForeignKey("individual_profiles.id", ondelete="CASCADE")
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     issuing_body: Mapped[str | None] = mapped_column(String(255))
@@ -246,13 +246,13 @@ class ProjectReference(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     company_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id", ondelete="CASCADE")
+        String(36), ForeignKey("companies.id", ondelete="CASCADE")
     )
     profile_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("individual_profiles.id", ondelete="CASCADE")
+        String(36), ForeignKey("individual_profiles.id", ondelete="CASCADE")
     )
     project_name: Mapped[str] = mapped_column(String(255), nullable=False)
     client_name: Mapped[str | None] = mapped_column(String(255))
@@ -280,13 +280,13 @@ class ProfileMedia(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     company_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id", ondelete="CASCADE")
+        String(36), ForeignKey("companies.id", ondelete="CASCADE")
     )
     profile_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("individual_profiles.id", ondelete="CASCADE")
+        String(36), ForeignKey("individual_profiles.id", ondelete="CASCADE")
     )
     media_type: Mapped[str] = mapped_column(String(50), nullable=False)
     url: Mapped[str] = mapped_column(String(500), nullable=False)

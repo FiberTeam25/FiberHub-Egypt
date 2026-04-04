@@ -17,6 +17,7 @@ from app.rfqs.schemas import (
     RFQResponseResponse,
     RFQResponseUpdateRequest,
     RFQSummaryResponse,
+    RFQUpdateRequest,
     RFQAttachmentResponse,
     RFQInvitationResponse,
 )
@@ -73,7 +74,7 @@ async def get_rfq(
 @router.patch("/{rfq_id}", response_model=RFQDetailResponse)
 async def update_rfq(
     rfq_id: str,
-    body: RFQCreateRequest,
+    body: RFQUpdateRequest,
     user: CurrentUser,
     service: Annotated[RFQService, Depends(_get_service)],
 ):

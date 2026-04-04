@@ -29,13 +29,13 @@ class Notification(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     user_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     type: Mapped[NotificationType] = mapped_column(
-        SAEnum(NotificationType, name="notification_type", create_constraint=True),
+        SAEnum(NotificationType, name="notification_type", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
     )
     title: Mapped[str] = mapped_column(String(255), nullable=False)

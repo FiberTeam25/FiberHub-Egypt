@@ -30,7 +30,7 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -38,11 +38,11 @@ class User(Base):
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     phone: Mapped[str | None] = mapped_column(String(20))
     account_type: Mapped[AccountType] = mapped_column(
-        Enum(AccountType, name="account_type", create_constraint=True),
+        Enum(AccountType, name="account_type", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
     )
     status: Mapped[UserStatus] = mapped_column(
-        Enum(UserStatus, name="user_status", create_constraint=True),
+        Enum(UserStatus, name="user_status", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=UserStatus.ACTIVE,
     )
@@ -78,10 +78,10 @@ class EmailVerificationToken(Base):
     __tablename__ = "email_verification_tokens"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     user_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
+        String(36),
         nullable=False,
     )
     token: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
@@ -96,10 +96,10 @@ class PasswordResetToken(Base):
     __tablename__ = "password_reset_tokens"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     user_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
+        String(36),
         nullable=False,
     )
     token: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
@@ -114,10 +114,10 @@ class RefreshToken(Base):
     __tablename__ = "refresh_tokens"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     user_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
+        String(36),
         nullable=False,
     )
     token_hash: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)

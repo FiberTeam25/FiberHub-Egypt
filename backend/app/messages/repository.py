@@ -63,6 +63,14 @@ class MessageRepository:
         result = await self.db.execute(query)
         return list(result.scalars().all())
 
+    async def get_message_by_id(self, message_id: str) -> Message | None:
+        result = await self.db.execute(
+            select(Message)
+            .options(selectinload(Message.sender), selectinload(Message.attachments))
+            .where(Message.id == message_id)
+        )
+        return result.scalar_one_or_none()
+
     async def get_last_message(self, thread_id: str) -> Message | None:
         result = await self.db.execute(
             select(Message)

@@ -44,17 +44,17 @@ class RFQ(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     company_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id"), nullable=False
+        String(36), ForeignKey("companies.id"), nullable=False
     )
     created_by: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id"), nullable=False
+        String(36), ForeignKey("users.id"), nullable=False
     )
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     request_type: Mapped[str] = mapped_column(String(100), nullable=False)
-    category_id: Mapped[str | None] = mapped_column(UUID(as_uuid=False))
+    category_id: Mapped[str | None] = mapped_column(String(36))
     category_type: Mapped[str | None] = mapped_column(String(20))
     description: Mapped[str] = mapped_column(Text, nullable=False)
     location: Mapped[str | None] = mapped_column(String(255))
@@ -64,12 +64,12 @@ class RFQ(Base):
     deadline: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     notes: Mapped[str | None] = mapped_column(Text)
     status: Mapped[RFQStatus] = mapped_column(
-        SAEnum(RFQStatus, name="rfq_status", create_constraint=True),
+        SAEnum(RFQStatus, name="rfq_status", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=RFQStatus.DRAFT,
     )
     awarded_to: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id")
+        String(36), ForeignKey("companies.id")
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
@@ -91,10 +91,10 @@ class RFQAttachment(Base):
     __tablename__ = "rfq_attachments"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     rfq_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("rfqs.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("rfqs.id", ondelete="CASCADE"), nullable=False
     )
     file_url: Mapped[str] = mapped_column(String(500), nullable=False)
     file_name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -114,16 +114,16 @@ class RFQInvitation(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     rfq_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("rfqs.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("rfqs.id", ondelete="CASCADE"), nullable=False
     )
     company_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id"), nullable=False
+        String(36), ForeignKey("companies.id"), nullable=False
     )
     status: Mapped[RFQResponseStatus] = mapped_column(
-        SAEnum(RFQResponseStatus, name="rfq_response_status", create_constraint=True),
+        SAEnum(RFQResponseStatus, name="rfq_response_status", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=RFQResponseStatus.INVITED,
     )
@@ -144,16 +144,16 @@ class RFQResponse(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     rfq_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("rfqs.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("rfqs.id", ondelete="CASCADE"), nullable=False
     )
     company_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id"), nullable=False
+        String(36), ForeignKey("companies.id"), nullable=False
     )
     submitted_by: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id"), nullable=False
+        String(36), ForeignKey("users.id"), nullable=False
     )
     cover_note: Mapped[str | None] = mapped_column(Text)
     quoted_amount: Mapped[float | None] = mapped_column(Numeric(15, 2))
@@ -163,7 +163,7 @@ class RFQResponse(Base):
     file_url: Mapped[str | None] = mapped_column(String(500))
     file_name: Mapped[str | None] = mapped_column(String(255))
     status: Mapped[RFQResponseStatus] = mapped_column(
-        SAEnum(RFQResponseStatus, name="rfq_response_status", create_constraint=False),
+        SAEnum(RFQResponseStatus, name="rfq_response_status", create_constraint=False, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=RFQResponseStatus.SUBMITTED,
     )
@@ -183,19 +183,19 @@ class RFQStatusHistory(Base):
     __tablename__ = "rfq_status_history"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     rfq_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("rfqs.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("rfqs.id", ondelete="CASCADE"), nullable=False
     )
     old_status: Mapped[RFQStatus | None] = mapped_column(
-        SAEnum(RFQStatus, name="rfq_status", create_constraint=False)
+        SAEnum(RFQStatus, name="rfq_status", create_constraint=False, values_callable=lambda x: [e.value for e in x])
     )
     new_status: Mapped[RFQStatus] = mapped_column(
-        SAEnum(RFQStatus, name="rfq_status", create_constraint=False), nullable=False
+        SAEnum(RFQStatus, name="rfq_status", create_constraint=False, values_callable=lambda x: [e.value for e in x]), nullable=False
     )
     changed_by: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id")
+        String(36), ForeignKey("users.id")
     )
     note: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(

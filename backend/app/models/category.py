@@ -12,12 +12,12 @@ class ProductCategory(Base):
     __tablename__ = "product_categories"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     slug: Mapped[str] = mapped_column(String(150), unique=True, nullable=False)
     parent_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("product_categories.id")
+        String(36), ForeignKey("product_categories.id")
     )
     description: Mapped[str | None] = mapped_column(Text)
     icon: Mapped[str | None] = mapped_column(String(100))
@@ -32,12 +32,12 @@ class ServiceCategory(Base):
     __tablename__ = "service_categories"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     slug: Mapped[str] = mapped_column(String(150), unique=True, nullable=False)
     parent_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("service_categories.id")
+        String(36), ForeignKey("service_categories.id")
     )
     description: Mapped[str | None] = mapped_column(Text)
     icon: Mapped[str | None] = mapped_column(String(100))
@@ -52,7 +52,7 @@ class Governorate(Base):
     __tablename__ = "governorates"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
     name_ar: Mapped[str | None] = mapped_column(String(100))

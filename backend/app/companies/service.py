@@ -100,6 +100,7 @@ class CompanyService:
         for key, value in kwargs.items():
             if value is not None and hasattr(member, key):
                 setattr(member, key, value)
+        await self.repo.db.flush()
         return member
 
     async def remove_member(self, company_id: str, member_id: str, user: User) -> None:
