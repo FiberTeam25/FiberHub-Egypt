@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/auth";
 import { useUpdateCompany } from "@/hooks/useCompanies";
+import { useTranslation } from "@/store/language";
 import api from "@/lib/api";
 import { NoCompanyPrompt } from "@/components/layout/NoCompanyPrompt";
 import type { Company, CompanyType, CompanySize } from "@/types/company";
@@ -89,6 +90,7 @@ interface FormState {
 export default function CompanyProfilePage() {
   const user = useAuthStore((s) => s.user);
   const updateCompany = useUpdateCompany();
+  const t = useTranslation();
 
   const [companyId, setCompanyId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -130,7 +132,7 @@ export default function CompanyProfilePage() {
           governorate: c.governorate ?? "",
         });
       })
-      .catch(() => setError("Failed to load company profile."))
+      .catch(() => setError(t("company.loadFailed")))
       .finally(() => setLoading(false));
   }, [user]);
 
@@ -157,7 +159,7 @@ export default function CompanyProfilePage() {
       });
       setSaved(true);
     } catch {
-      setError("Failed to save changes.");
+      setError(t("company.saveFailed"));
     }
   };
 

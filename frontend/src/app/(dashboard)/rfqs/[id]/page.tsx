@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/store/language";
 import { useRfq, useRfqResponses, useSubmitResponse } from "@/hooks/useRfqs";
 import api from "@/lib/api";
 import type { RFQ, RFQResponse, RFQAttachment, RFQInvitation, RFQStatus } from "@/types/rfq";
@@ -68,6 +69,7 @@ const INITIAL_RESPONSE: ResponseFormData = {
 
 function SupplierResponseForm({ rfqId }: { rfqId: string }) {
   const submitResponse = useSubmitResponse();
+  const t = useTranslation();
   const [form, setForm] = useState<ResponseFormData>(INITIAL_RESPONSE);
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -109,7 +111,7 @@ function SupplierResponseForm({ rfqId }: { rfqId: string }) {
       });
       setSubmitted(true);
     } catch {
-      setError("Failed to submit response.");
+      setError(t("rfqs.submitResponseFailed"));
     }
   }
 
@@ -447,6 +449,7 @@ export default function RfqDetailPage() {
   const params = useParams();
   const rfqId = params.id as string;
   const user = useAuthStore((s) => s.user);
+  const t = useTranslation();
   const { data: rfq, isLoading, isError } = useRfq(rfqId);
   const { data: responsesData } = useRfqResponses(rfqId);
 
@@ -461,7 +464,7 @@ export default function RfqDetailPage() {
   if (isError || !rfq) {
     return (
       <div className="py-20 text-center">
-        <p className="text-destructive">Failed to load RFQ.</p>
+        <p className="text-destructive">{t("rfqs.loadOneFailed")}</p>
       </div>
     );
   }

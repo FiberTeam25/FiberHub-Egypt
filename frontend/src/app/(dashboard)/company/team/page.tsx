@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import api from "@/lib/api";
+import { useTranslation } from "@/store/language";
 import { NoCompanyPrompt } from "@/components/layout/NoCompanyPrompt";
 import type { CompanyMember, MemberRole } from "@/types/company";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ import {
 const ROLES: MemberRole[] = ["owner", "admin", "manager", "member"];
 
 export default function TeamPage() {
+  const t = useTranslation();
   const [companyId, setCompanyId] = useState<string | null>(null);
   const [members, setMembers] = useState<CompanyMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +60,7 @@ export default function TeamPage() {
       const res = await api.get(`/companies/${cId}/members`);
       setMembers(res.data.items ?? res.data);
     } catch {
-      setError("Failed to load team members.");
+      setError(t("company.teamLoadFailed"));
     }
   }, []);
 
@@ -70,7 +72,7 @@ export default function TeamPage() {
         setCompanyId(cId);
         await fetchMembers(cId);
       })
-      .catch(() => setError("Failed to load company."))
+      .catch(() => setError(t("company.companyLoadFailed")))
       .finally(() => setLoading(false));
   }, [fetchMembers]);
 
@@ -87,7 +89,7 @@ export default function TeamPage() {
       setInviteRole("member");
       await fetchMembers(companyId);
     } catch {
-      setError("Failed to add member.");
+      setError(t("company.addMemberFailed"));
     } finally {
       setInviting(false);
     }
@@ -99,7 +101,7 @@ export default function TeamPage() {
       await api.patch(`/companies/${companyId}/members/${memberId}`, { role });
       await fetchMembers(companyId);
     } catch {
-      setError("Failed to update role.");
+      setError(t("company.updateRoleFailed"));
     }
   };
 
@@ -110,7 +112,7 @@ export default function TeamPage() {
       await api.delete(`/companies/${companyId}/members/${memberId}`);
       await fetchMembers(companyId);
     } catch {
-      setError("Failed to remove member.");
+      setError(t("company.removeMemberFailed"));
     }
   };
 

@@ -138,6 +138,27 @@ export const translations = {
     "rfqs.statusAwarded": "Awarded",
     "rfqs.statusCancelled": "Cancelled",
 
+    // Company profile / team / settings
+    "company.loadFailed": "Failed to load company profile.",
+    "company.saveFailed": "Failed to save changes.",
+    "company.dataLoadFailed": "Failed to load company data.",
+    "company.teamLoadFailed": "Failed to load team members.",
+    "company.companyLoadFailed": "Failed to load company.",
+    "company.addMemberFailed": "Failed to add member.",
+    "company.updateRoleFailed": "Failed to update role.",
+    "company.removeMemberFailed": "Failed to remove member.",
+
+    // Profile page
+    "profile.loadFailed": "Failed to load profile.",
+    "profile.saveFailed": "Failed to save profile.",
+
+    // RFQ create / detail
+    "rfqs.saveDraftFailed": "Failed to save draft.",
+    "rfqs.saveFailed": "Failed to save. Please try again.",
+    "rfqs.publishFailed": "Failed to publish RFQ.",
+    "rfqs.submitResponseFailed": "Failed to submit response.",
+    "rfqs.loadOneFailed": "Failed to load RFQ.",
+
     // Verification page
     "verification.title": "Company Verification",
     "verification.statusTitle": "Verification Status",
@@ -333,6 +354,23 @@ export const translations = {
     "company.companyName": "اسم الشركة",
     "company.creating": "جاري الإنشاء...",
     "company.createFailed": "فشل إنشاء الشركة.",
+    "company.loadFailed": "فشل تحميل ملف الشركة.",
+    "company.saveFailed": "فشل حفظ التغييرات.",
+    "company.dataLoadFailed": "فشل تحميل بيانات الشركة.",
+    "company.teamLoadFailed": "فشل تحميل أعضاء الفريق.",
+    "company.companyLoadFailed": "فشل تحميل الشركة.",
+    "company.addMemberFailed": "فشل إضافة العضو.",
+    "company.updateRoleFailed": "فشل تحديث الدور.",
+    "company.removeMemberFailed": "فشل إزالة العضو.",
+
+    "profile.loadFailed": "فشل تحميل الملف الشخصي.",
+    "profile.saveFailed": "فشل حفظ الملف الشخصي.",
+
+    "rfqs.saveDraftFailed": "فشل حفظ المسودة.",
+    "rfqs.saveFailed": "فشل الحفظ. يرجى المحاولة مرة أخرى.",
+    "rfqs.publishFailed": "فشل نشر طلب العرض.",
+    "rfqs.submitResponseFailed": "فشل إرسال الرد.",
+    "rfqs.loadOneFailed": "فشل تحميل طلب العرض.",
 
     "shortlist.title": "القائمة المختصرة",
     "shortlist.empty": "قائمتك المختصرة فارغة. تصفح الشركات والملفات الشخصية لحفظها هنا.",

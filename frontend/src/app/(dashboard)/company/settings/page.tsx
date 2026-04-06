@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
+import { useTranslation } from "@/store/language";
 import { NoCompanyPrompt } from "@/components/layout/NoCompanyPrompt";
 import type { Company } from "@/types/company";
 import { useAuthStore } from "@/store/auth";
@@ -19,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function CompanySettingsPage() {
   const user = useAuthStore((s) => s.user);
+  const t = useTranslation();
   const [company, setCompany] = useState<Company | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export default function CompanySettingsPage() {
     api
       .get("/companies/mine")
       .then((res) => setCompany(res.data))
-      .catch(() => setError("Failed to load company data."))
+      .catch(() => setError(t("company.dataLoadFailed")))
       .finally(() => setLoading(false));
   }, []);
 

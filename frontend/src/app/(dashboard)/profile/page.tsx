@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useAuthStore } from "@/store/auth";
+import { useTranslation } from "@/store/language";
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
@@ -66,6 +67,7 @@ interface ProfileForm {
 
 export default function ProfilePage() {
   const user = useAuthStore((s) => s.user);
+  const t = useTranslation();
   const [profileId, setProfileId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -102,7 +104,7 @@ export default function ProfilePage() {
           hourly_rate: p.hourly_rate?.toString() ?? "",
         });
       })
-      .catch(() => setError("Failed to load profile."))
+      .catch(() => setError(t("profile.loadFailed")))
       .finally(() => setLoading(false));
   }, []);
 
@@ -150,7 +152,7 @@ export default function ProfilePage() {
       }
       setSaved(true);
     } catch {
-      setError("Failed to save profile.");
+      setError(t("profile.saveFailed"));
     } finally {
       setSaving(false);
     }

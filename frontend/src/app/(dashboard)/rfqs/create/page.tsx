@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "@/store/language";
 import { useCreateRfq, usePublishRfq, useInviteCompanies } from "@/hooks/useRfqs";
 import { useCategories } from "@/hooks/useSearch";
 import { useSearchCompanies } from "@/hooks/useSearch";
@@ -57,6 +58,7 @@ const INITIAL_FORM: FormData = {
 
 export default function CreateRfqPage() {
   const router = useRouter();
+  const t = useTranslation();
   const createRfq = useCreateRfq();
   const publishRfq = usePublishRfq();
   const inviteCompanies = useInviteCompanies();
@@ -100,7 +102,7 @@ export default function CreateRfqPage() {
       }
       router.push("/rfqs");
     } catch {
-      setError("Failed to save draft.");
+      setError(t("rfqs.saveDraftFailed"));
     }
   }
 
@@ -124,7 +126,7 @@ export default function CreateRfqPage() {
         }
         setStep(2);
       } catch {
-        setError("Failed to save. Please try again.");
+        setError(t("rfqs.saveFailed"));
       }
     } else if (step === 2) {
       setStep(3);
@@ -177,7 +179,7 @@ export default function CreateRfqPage() {
       await publishRfq.mutateAsync(rfqId);
       router.push(`/rfqs/${rfqId}`);
     } catch {
-      setError("Failed to publish RFQ.");
+      setError(t("rfqs.publishFailed"));
     }
   }
 
