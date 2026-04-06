@@ -14,10 +14,10 @@ class IndividualProfile(Base):
     __tablename__ = "individual_profiles"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     user_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id", ondelete="CASCADE"),
+        String(36), ForeignKey("users.id", ondelete="CASCADE"),
         unique=True, nullable=False,
     )
     slug: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
@@ -31,7 +31,7 @@ class IndividualProfile(Base):
     hourly_rate_egp: Mapped[float | None] = mapped_column(Numeric(10, 2))
     resume_url: Mapped[str | None] = mapped_column(String(500))
     verification_status: Mapped[VerificationStatusEnum] = mapped_column(
-        SAEnum(VerificationStatusEnum, name="verification_status", create_constraint=False),
+        SAEnum(VerificationStatusEnum, name="verification_status", create_constraint=False, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=VerificationStatusEnum.NOT_SUBMITTED,
     )

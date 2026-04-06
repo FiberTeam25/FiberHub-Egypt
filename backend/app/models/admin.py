@@ -32,17 +32,17 @@ class AdminActionLog(Base):
     __tablename__ = "admin_action_logs"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     admin_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id"), nullable=False
+        String(36), ForeignKey("users.id"), nullable=False
     )
     action_type: Mapped[AdminActionType] = mapped_column(
-        SAEnum(AdminActionType, name="admin_action_type", create_constraint=True),
+        SAEnum(AdminActionType, name="admin_action_type", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
     )
     target_type: Mapped[str] = mapped_column(String(50), nullable=False)
-    target_id: Mapped[str] = mapped_column(UUID(as_uuid=False), nullable=False)
+    target_id: Mapped[str] = mapped_column(String(36), nullable=False)
     details: Mapped[dict | None] = mapped_column(JSONB)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
@@ -62,16 +62,16 @@ class Shortlist(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     user_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     company_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id", ondelete="CASCADE")
+        String(36), ForeignKey("companies.id", ondelete="CASCADE")
     )
     profile_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("individual_profiles.id", ondelete="CASCADE")
+        String(36), ForeignKey("individual_profiles.id", ondelete="CASCADE")
     )
     note: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(

@@ -110,9 +110,8 @@ class MessageService:
 
         await self.repo.db.flush()
 
-        # Reload with sender
-        messages = await self.repo.get_thread_messages(thread_id)
-        return messages[-1]
+        # Reload with sender and attachments by specific ID (avoids race condition)
+        return await self.repo.get_message_by_id(msg.id)
 
     async def mark_as_read(self, thread_id: str, user: User) -> None:
         if not await self.repo.is_participant(thread_id, user.id):

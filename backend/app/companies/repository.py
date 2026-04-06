@@ -26,6 +26,14 @@ class CompanyRepository:
         result = await self.db.execute(select(Company).where(Company.id == company_id))
         return result.scalar_one_or_none()
 
+    async def get_primary_by_user_id(self, user_id: str) -> Company | None:
+        result = await self.db.execute(
+            select(Company)
+            .join(CompanyMember, CompanyMember.company_id == Company.id)
+            .where(CompanyMember.user_id == user_id, CompanyMember.is_primary.is_(True))
+        )
+        return result.scalar_one_or_none()
+
     async def get_by_slug(self, slug: str) -> Company | None:
         result = await self.db.execute(select(Company).where(Company.slug == slug))
         return result.scalar_one_or_none()

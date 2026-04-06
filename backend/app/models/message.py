@@ -29,13 +29,13 @@ class MessageThread(Base):
     __tablename__ = "message_threads"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     context_type: Mapped[ThreadContextType] = mapped_column(
-        SAEnum(ThreadContextType, name="thread_context_type", create_constraint=True),
+        SAEnum(ThreadContextType, name="thread_context_type", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
     )
-    context_id: Mapped[str | None] = mapped_column(UUID(as_uuid=False))
+    context_id: Mapped[str | None] = mapped_column(String(36))
     subject: Mapped[str | None] = mapped_column(String(255))
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
@@ -55,16 +55,16 @@ class MessageParticipant(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     thread_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("message_threads.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("message_threads.id", ondelete="CASCADE"), nullable=False
     )
     user_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id"), nullable=False
+        String(36), ForeignKey("users.id"), nullable=False
     )
     company_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id")
+        String(36), ForeignKey("companies.id")
     )
     joined_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
@@ -82,13 +82,13 @@ class Message(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     thread_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("message_threads.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("message_threads.id", ondelete="CASCADE"), nullable=False
     )
     sender_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id"), nullable=False
+        String(36), ForeignKey("users.id"), nullable=False
     )
     content: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
@@ -104,10 +104,10 @@ class MessageAttachment(Base):
     __tablename__ = "message_attachments"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     message_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("messages.id", ondelete="CASCADE"), nullable=False
+        String(36), ForeignKey("messages.id", ondelete="CASCADE"), nullable=False
     )
     file_url: Mapped[str] = mapped_column(String(500), nullable=False)
     file_name: Mapped[str] = mapped_column(String(255), nullable=False)

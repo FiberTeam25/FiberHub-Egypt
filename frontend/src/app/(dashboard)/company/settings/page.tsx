@@ -25,7 +25,7 @@ export default function CompanySettingsPage() {
 
   useEffect(() => {
     api
-      .get("/companies/my")
+      .get("/companies/mine")
       .then((res) => setCompany(res.data))
       .catch(() => setError("Failed to load company data."))
       .finally(() => setLoading(false));

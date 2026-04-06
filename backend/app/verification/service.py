@@ -64,14 +64,18 @@ class VerificationService:
             company = await self.db.execute(
                 select(Company).where(Company.id == company_id)
             )
-            c = company.scalar_one()
+            c = company.scalar_one_or_none()
+            if not c:
+                raise NotFoundError("Company not found")
             c.verification_status = VerificationStatusEnum.PENDING
 
         if profile_id:
             profile_result = await self.db.execute(
                 select(IndividualProfile).where(IndividualProfile.id == profile_id)
             )
-            prof = profile_result.scalar_one()
+            prof = profile_result.scalar_one_or_none()
+            if not prof:
+                raise NotFoundError("Individual profile not found")
             prof.verification_status = VerificationStatusEnum.PENDING
 
         await self.db.flush()
@@ -188,7 +192,9 @@ class VerificationService:
             result = await self.db.execute(
                 select(Company).where(Company.id == req.company_id)
             )
-            company = result.scalar_one()
+            company = result.scalar_one_or_none()
+            if not company:
+                raise NotFoundError("Company not found")
             company.verification_status = status
             # Find primary member for notification
             member_result = await self.db.execute(
@@ -204,7 +210,9 @@ class VerificationService:
             result = await self.db.execute(
                 select(IndividualProfile).where(IndividualProfile.id == req.profile_id)
             )
-            profile = result.scalar_one()
+            profile = result.scalar_one_or_none()
+            if not profile:
+                raise NotFoundError("Individual profile not found")
             profile.verification_status = status
             return profile.user_id
 

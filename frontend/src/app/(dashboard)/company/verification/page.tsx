@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import { useTranslation } from "@/store/language";
 import { NoCompanyPrompt } from "@/components/layout/NoCompanyPrompt";
 import type { VerificationStatus } from "@/types/company";
 import { Button } from "@/components/ui/button";
@@ -54,19 +55,20 @@ function statusBadgeVariant(
   }
 }
 
-function statusLabel(status: VerificationStatus): string {
+function statusLabel(status: VerificationStatus, t: (k: string) => string): string {
   const labels: Record<VerificationStatus, string> = {
-    not_submitted: "Not Submitted",
-    pending: "Pending Review",
-    approved: "Verified",
-    rejected: "Rejected",
-    expired: "Expired",
-    needs_update: "Needs Update",
+    not_submitted: t("verification.statusNotSubmitted"),
+    pending: t("verification.statusPending"),
+    approved: t("verification.statusApproved"),
+    rejected: t("verification.statusRejected"),
+    expired: t("verification.statusExpired"),
+    needs_update: t("verification.statusNeedsUpdate"),
   };
   return labels[status];
 }
 
 export default function VerificationPage() {
+  const t = useTranslation();
   const [info, setInfo] = useState<VerificationInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -82,7 +84,7 @@ export default function VerificationPage() {
       const res = await api.get("/verification/status");
       setInfo(res.data);
     } catch {
-      setError("Failed to load verification status.");
+      setError(t("verification.loadFailed"));
     } finally {
       setLoading(false);
     }
@@ -107,7 +109,7 @@ export default function VerificationPage() {
       setFile(null);
       await fetchStatus();
     } catch {
-      setError("Failed to submit verification documents.");
+      setError(t("verification.submitFailed"));
     } finally {
       setSubmitting(false);
     }
@@ -129,28 +131,26 @@ export default function VerificationPage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold">Company Verification</h1>
+      <h1 className="text-2xl font-bold">{t("verification.title")}</h1>
 
       <Card>
         <CardHeader>
-          <CardTitle>Verification Status</CardTitle>
-          <CardDescription>
-            Verified companies get a trust badge and higher visibility.
-          </CardDescription>
+          <CardTitle>{t("verification.statusTitle")}</CardTitle>
+          <CardDescription>{t("verification.statusDesc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Badge variant={statusBadgeVariant(status)} className="text-sm">
-            {statusLabel(status)}
+            {statusLabel(status, t as (k: string) => string)}
           </Badge>
           {info?.submitted_at && (
             <p className="mt-2 text-sm text-muted-foreground">
-              Submitted on{" "}
+              {t("verification.submittedOn")}{" "}
               {new Date(info.submitted_at).toLocaleDateString()}
             </p>
           )}
           {info?.reviewed_at && (
             <p className="text-sm text-muted-foreground">
-              Reviewed on{" "}
+              {t("verification.reviewedOn")}{" "}
               {new Date(info.reviewed_at).toLocaleDateString()}
             </p>
           )}
@@ -167,10 +167,10 @@ export default function VerificationPage() {
               </div>
               <div>
                 <p className="font-semibold text-green-700">
-                  Your company is verified
+                  {t("verification.approvedMsg")}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Your verification badge is visible on your company profile.
+                  {t("verification.approvedDesc")}
                 </p>
               </div>
             </div>
@@ -182,10 +182,9 @@ export default function VerificationPage() {
       {status === "pending" && (
         <Card>
           <CardContent className="pt-6">
-            <p className="font-medium">Your documents are under review.</p>
+            <p className="font-medium">{t("verification.pendingMsg")}</p>
             <p className="text-sm text-muted-foreground mt-1">
-              This typically takes 1-3 business days. You will be notified once
-              the review is complete.
+              {t("verification.pendingDesc")}
             </p>
           </CardContent>
         </Card>
@@ -196,18 +195,18 @@ export default function VerificationPage() {
         <Card>
           <CardContent className="pt-6 space-y-3">
             <p className="font-medium text-destructive">
-              Your verification was not approved.
+              {t("verification.rejectedMsg")}
             </p>
             {info?.rejection_notes && (
               <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3">
-                <p className="text-sm font-medium">Reviewer Notes:</p>
+                <p className="text-sm font-medium">{t("verification.reviewerNotes")}</p>
                 <p className="text-sm text-muted-foreground mt-1">
                   {info.rejection_notes}
                 </p>
               </div>
             )}
             <p className="text-sm text-muted-foreground">
-              Please address the issues above and resubmit your documents.
+              {t("verification.rejectedDesc")}
             </p>
           </CardContent>
         </Card>
@@ -222,21 +221,21 @@ export default function VerificationPage() {
           <CardHeader>
             <CardTitle>
               {status === "not_submitted"
-                ? "Submit Verification Documents"
-                : "Resubmit Documents"}
+                ? t("verification.submitTitle")
+                : t("verification.resubmitTitle")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>Document Type</Label>
+              <Label>{t("verification.docType")}</Label>
               <Select value={docType} onValueChange={(v) => setDocType(v ?? DOCUMENT_TYPES[0])}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {DOCUMENT_TYPES.map((t) => (
-                    <SelectItem key={t} value={t}>
-                      {t
+                  {DOCUMENT_TYPES.map((dt) => (
+                    <SelectItem key={dt} value={dt}>
+                      {dt
                         .split("_")
                         .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
                         .join(" ")}
@@ -246,7 +245,7 @@ export default function VerificationPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="doc-file">Upload Document</Label>
+              <Label htmlFor="doc-file">{t("verification.uploadDoc")}</Label>
               <Input
                 id="doc-file"
                 type="file"
@@ -254,14 +253,14 @@ export default function VerificationPage() {
                 onChange={(e) => setFile(e.target.files?.[0] ?? null)}
               />
               <p className="text-xs text-muted-foreground">
-                Accepted formats: PDF, JPG, PNG. Max 10MB.
+                {t("verification.uploadFormats")}
               </p>
             </div>
 
             {error && <p className="text-sm text-destructive">{error}</p>}
             {submitSuccess && (
               <p className="text-sm text-green-600">
-                Documents submitted successfully.
+                {t("verification.submitSuccess")}
               </p>
             )}
 
@@ -269,7 +268,7 @@ export default function VerificationPage() {
               onClick={handleSubmit}
               disabled={!file || submitting}
             >
-              {submitting ? "Submitting..." : "Submit for Verification"}
+              {submitting ? t("verification.submitting") : t("verification.submitBtn")}
             </Button>
           </CardContent>
         </Card>

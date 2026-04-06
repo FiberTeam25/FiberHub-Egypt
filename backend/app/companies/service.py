@@ -37,6 +37,9 @@ class CompanyService:
         company.profile_completion = self._calculate_completion(company)
         return company
 
+    async def get_primary_company(self, user: User) -> Company | None:
+        return await self.repo.get_primary_by_user_id(user.id)
+
     async def get_company_by_slug(self, slug: str) -> Company:
         company = await self.repo.get_by_slug(slug)
         if not company or not company.is_active:
@@ -100,6 +103,7 @@ class CompanyService:
         for key, value in kwargs.items():
             if value is not None and hasattr(member, key):
                 setattr(member, key, value)
+        await self.repo.db.flush()
         return member
 
     async def remove_member(self, company_id: str, member_id: str, user: User) -> None:

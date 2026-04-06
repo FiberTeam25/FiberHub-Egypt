@@ -20,16 +20,16 @@ class VerificationRequest(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     company_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("companies.id", ondelete="CASCADE")
+        String(36), ForeignKey("companies.id", ondelete="CASCADE")
     )
     profile_id: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("individual_profiles.id", ondelete="CASCADE")
+        String(36), ForeignKey("individual_profiles.id", ondelete="CASCADE")
     )
     status: Mapped[VerificationStatusEnum] = mapped_column(
-        SAEnum(VerificationStatusEnum, name="verification_status", create_constraint=False),
+        SAEnum(VerificationStatusEnum, name="verification_status", create_constraint=False, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         default=VerificationStatusEnum.PENDING,
     )
@@ -38,7 +38,7 @@ class VerificationRequest(Base):
     )
     reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     reviewed_by: Mapped[str | None] = mapped_column(
-        UUID(as_uuid=False), ForeignKey("users.id")
+        String(36), ForeignKey("users.id")
     )
     admin_notes: Mapped[str | None] = mapped_column(Text)
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
@@ -53,10 +53,10 @@ class VerificationDocument(Base):
     __tablename__ = "verification_documents"
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False), primary_key=True, default=lambda: str(uuid4())
+        String(36), primary_key=True, default=lambda: str(uuid4())
     )
     verification_request_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
+        String(36),
         ForeignKey("verification_requests.id", ondelete="CASCADE"),
         nullable=False,
     )
